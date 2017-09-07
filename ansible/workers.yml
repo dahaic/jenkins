@@ -134,3 +134,18 @@
       - python3-gobject
       state: installed
     when: ansible_distribution == 'Fedora'
+
+  # oscap-anaconda-addon is not relevant for rhel6
+  - name: Ensure oscap-anaconda-addon test dependencies are installed
+    package:
+      name:
+      - gettext
+      - python2-devel
+      - python-mock
+      - python-nose
+      - python-cpio
+      - openscap-utils
+      - openscap-python
+      - anaconda
+      state: installed
+    when: ansible_distribution != 'RedHat' or ansible_distribution_version.split(".")[0] >= "7"

@@ -44,6 +44,20 @@
       state: present
     when: ansible_distribution == 'RedHat' and ansible_distribution_version.split(".")[0] == "7"
 
+  # EPEL is needed for for python-pip package, which is required for
+  # python-jenkins and lxml -these are required by jenkins_job module.
+  # jenkins_job is required by us.
+  # On workers, it's needed for oscap-anaconda-addon
+  - name: Add repository
+    yum_repository:
+      name: epel
+      description: Extra Packages for Enterprise Linux 7 - $basearch
+      mirrorlist: https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=$basearch
+      failovermethod: priority
+      gpgkey: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7Server
+      gpgcheck: yes
+    when: ansible_distribution == 'RedHat' and ansible_distribution_version.split(".")[0] == "7"
+
   - name: Install cronie
     package:
       name: cronie
